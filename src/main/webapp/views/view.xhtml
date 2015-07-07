@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<f:view contentType="text/html"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+	<h:head />
+	<h:body>
+		<h:form >
+			<p:remoteCommand action="#{EurekaImportBean.redirect}" autoRun="#{!EurekaImportBean.error}" />
+		</h:form>
+		<center>
+			<p:graphicImage value="/image/loader1.gif" width="50px" rendered="#{!EurekaImportBean.error}"></p:graphicImage>
+			<h1>
+				<h:outputText value="#{EurekaImportBean.message}" style="color: red;" rendered="#{EurekaImportBean.error}"/>
+				<h:outputText value="#{EurekaImportBean.message}" rendered="#{!EurekaImportBean.error}"/>
+			</h1>
+		</center>
+	</h:body>
+</f:view>
