@@ -91,10 +91,10 @@ public class EurekaImportBacking extends BackingBean{
 					}else{
 						if(loggedUser == null){
 							message = context.getMessage("not.logged.go.to.login");
-							redirectURL = HttpUtil.addParameter(context.getThemeDisplay().getURLSignIn(), "redirect", "/web/guest/test");
+							redirectURL = HttpUtil.addParameter(context.getThemeDisplay().getURLSignIn(), "redirect", context.getThemeDisplay().getURLCurrent());
 						}else{
 							message = context.getMessage("logged.different.user");
-							redirectURL = HttpUtil.addParameter("/c/portal/eureka/logout", "redirect", "/web/guest/test");
+							redirectURL = HttpUtil.addParameter("/c/portal/eureka/logout", "redirect", context.getThemeDisplay().getURLCurrent());
 						}
 						
 						EurekaImportBacking.getSession().put(input.getUserId(), input);
