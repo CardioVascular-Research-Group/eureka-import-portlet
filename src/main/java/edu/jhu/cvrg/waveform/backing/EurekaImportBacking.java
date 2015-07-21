@@ -36,6 +36,7 @@ public class EurekaImportBacking extends BackingBean{
 	private String redirectURL;
 
 	private static Map<String, EurekaInput> session;
+	private static final int CLEANER_INTERVAL = 30;
 	
 	@PostConstruct
 	public void init() {
@@ -142,7 +143,7 @@ public class EurekaImportBacking extends BackingBean{
 		if(session == null){
 			session = new HashMap<String, EurekaInput>();
 			ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-			scheduler.scheduleAtFixedRate(new Thread(){public void run(){ EurekaImportBacking.sessionCleanUp(); };}, 10, 10, TimeUnit.MINUTES);
+			scheduler.scheduleAtFixedRate(new Thread(){public void run(){ EurekaImportBacking.sessionCleanUp(); };}, CLEANER_INTERVAL, CLEANER_INTERVAL, TimeUnit.MINUTES);
 		} 
 		return session;
 	}
