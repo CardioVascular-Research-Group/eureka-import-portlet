@@ -1,10 +1,15 @@
 *.class
+.classpath
+.project
+/.settings
+
 
 # Package Files #
 *.jar
 *.war
 *.ear
-/build
-/bin
-*/WEB-INF/classes
+
 /target
+/bin
+/build
+*/WEB-INF/classes
