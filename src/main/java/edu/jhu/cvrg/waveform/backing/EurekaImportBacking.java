@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -43,6 +44,9 @@ public class EurekaImportBacking extends BackingBean{
 		this.getLog().info("Initializing MyBean");
 		LiferayFacesContext context = LiferayFacesContext.getInstance();
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(context.getPortletRequest());
+		
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(context.getPortletResponse());
+		response.addHeader("Access-Control-Allow-Origin", "https://eureka.cvrgrid.org");
 		
 		EurekaInput input = null;
 		User loggedUser = null;
