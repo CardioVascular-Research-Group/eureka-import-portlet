@@ -28,16 +28,39 @@ import edu.jhu.cvrg.waveform.service.controller.EurekaController;
 import edu.jhu.cvrg.waveform.service.model.EurekaInput;
 import edu.jhu.cvrg.waveform.utility.ResourceUtility;
 
+/**
+ * <strong>Eureka import backing bean</strong><br>
+ * 
+ * Designed to be accessed as a logged user or a liferay guest. This class have the objective to handle the submitted JSON data, validate it and import it as a node in the virtual tree structure.<br><br>
+ * 
+ * 
+ * @author avilard4
+ *
+ */
 @ViewScoped
 @ManagedBean(name = "EurekaImportBean")
 public class EurekaImportBacking extends BackingBean{
 	
 	private boolean error = false;
+	/**
+	 * Message to be showed to the user, could be a INFO or ERROR
+	 */
 	private String message;
+	
+	/**
+	 * Used to hold the auto redirect URL, based on the resquest action
+	 */
 	private String redirectURL;
 
+	/**
+	 * Temporary local session to handle the un-identified resquest.
+	 */
 	private static Map<String, EurekaInput> session;
+	/**
+	 * Clean-up interval for the temporary local session. (in minutes) 
+	 */
 	private static final int CLEANER_INTERVAL = 30;
+	
 	
 	@PostConstruct
 	public void init() {
@@ -52,16 +75,18 @@ public class EurekaImportBacking extends BackingBean{
 		User loggedUser = null;
 		
 		try {
-			
+			//retreive the json parameter
 			String jsonString = PortalUtil.getOriginalServletRequest(request).getParameter("json");
 			loggedUser = ResourceUtility.getCurrentUser();
 			
 			if(jsonString != null){
+				//Parse to JSON object
 				ObjectMapper mapper = new ObjectMapper();
 				input = mapper.readValue(jsonString, EurekaInput.class);	
 				
 			}else{
 				if(loggedUser != null){
+					//retrieve the requested input from the temporary session
 					input = EurekaImportBacking.getSession().get(loggedUser.getScreenName());
 					EurekaImportBacking.getSession().remove(loggedUser.getScreenName());
 				}
@@ -89,15 +114,18 @@ public class EurekaImportBacking extends BackingBean{
 				try{
 					this.getLog().info("User id: "+input.getUserId());
 					if(loggedUser != null && loggedUser.getScreenName().equals(input.getUserId())){
+						//logged user match with the requested data
 						EurekaController.getInstance().eurekaImportProcess(input);
 						message = context.getMessage("sucess.go.to.upload");
 						redirectURL = "/web/guest/upload";
 						
 					}else{
 						if(loggedUser == null){
+							//No user, redirect to login
 							message = context.getMessage("not.logged.go.to.login");
 							redirectURL = HttpUtil.addParameter(context.getThemeDisplay().getURLSignIn(), "redirect", context.getThemeDisplay().getURLCurrent());
 						}else{
+							//the logged user not match. Perform the logout action.
 							message = context.getMessage("logged.different.user");
 							redirectURL = HttpUtil.addParameter("/c/portal/eureka/logout", "redirect", context.getThemeDisplay().getURLCurrent());
 						}
@@ -130,6 +158,10 @@ public class EurekaImportBacking extends BackingBean{
 		return message;
 	}
 	
+	/**
+	 * The liferay redirect method, triggered by a primefaces remote command.
+	 * @return null
+	 */
 	public String redirect(){
 		
 		try {
@@ -143,6 +175,11 @@ public class EurekaImportBacking extends BackingBean{
 		return null;
 	}
 	
+	/**
+	 * This method return the temporary session map. If is null, initialize it and create the clean-up scheduled executor.
+	 * 
+	 * @return The temporary session map
+	 */
 	public static Map<String, EurekaInput> getSession(){
 		if(session == null){
 			session = new HashMap<String, EurekaInput>();

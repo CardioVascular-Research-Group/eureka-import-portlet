@@ -18,6 +18,12 @@ import edu.jhu.cvrg.data.factory.ConnectionFactory;
 import edu.jhu.cvrg.data.util.DataStorageException;
 import edu.jhu.cvrg.waveform.service.model.EurekaInput;
 
+/**
+ * Controller to Eureka Import process
+ * 
+ * @author avilard4
+ *
+ */
 public class EurekaController {
 	
 	private static EurekaController singleton;
@@ -33,7 +39,14 @@ public class EurekaController {
 	private EurekaController() {
 	}
 	
-
+	/**
+	 * Connect to the database and create the requested virtual tree structure.
+	 * 
+	 * @param input Requested JSON data, converted into a EurekaInput
+	 * @throws SystemException
+	 * @throws PortalException
+	 * @throws DataStorageException
+	 */
 	public void eurekaImportProcess(EurekaInput input) throws SystemException, PortalException, DataStorageException {
 		User user = initializeLiferayPermissionChecker(input.getUserId());
     	

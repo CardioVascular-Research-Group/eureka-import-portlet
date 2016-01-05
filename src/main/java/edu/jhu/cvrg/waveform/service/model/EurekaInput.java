@@ -41,6 +41,11 @@ public class EurekaInput {
 		}
 		subjects.add(subject);
 	}
+	
+	/**
+	 * Indicate when the object could be removed from temporary session
+	 * 
+	 */
 	public boolean removeMe(){
 		return (System.currentTimeMillis() - this.creationDate.getTime() >= MAX_AGE); 
 	}
